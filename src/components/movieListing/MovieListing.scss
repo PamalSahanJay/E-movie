@@ -1,0 +1,17 @@
+@use "../../common/colors" as *;
+
+.movie-list,
+.show-list {
+  margin: 20px 0px;
+  h2 {
+    color: $font-secondary;
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+}
+
+.movie-container {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(220px, 1fr));
+  grid-gap: 15px;
+}
