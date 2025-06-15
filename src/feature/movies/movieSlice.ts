@@ -22,9 +22,18 @@ export const fetchAsyncShows = createAsyncThunk("movies/fetchAsyncShows",
   }
 )
 
+export const fetchAsyncMovieOrShowDetail = createAsyncThunk(
+  "movies/fetchAsyncMovieOrShowDetail",
+  async (id: string) => {
+    const response = await moveieBaseURL.get(`?apiKey=${API_KEY}&i=${id}&Plot=full`);
+    return response.data;
+  }
+);
+
 const initialState = {
   movies: {},
-  shows: {}
+  shows: {},
+  selectedMovieOrShow: {}
 }
 
 const movieSlice = createSlice({
@@ -33,6 +42,9 @@ const movieSlice = createSlice({
   reducers: {
     addMovies: (state, action) => {
       state.movies = action.payload;
+    },
+    removeSelectedMovieOrShow: (state) => {
+      state.selectedMovieOrShow = {};
     }
   },
   extraReducers: (builderArg) => {
@@ -58,10 +70,21 @@ const movieSlice = createSlice({
     builderArg.addCase(fetchAsyncShows.rejected, () => {
       console.log("Rejected");
     });
+    builderArg.addCase(fetchAsyncMovieOrShowDetail.pending, () => {
+      console.log("Pending");
+    });
+    builderArg.addCase(fetchAsyncMovieOrShowDetail.fulfilled, (state, action) => {
+      console.log("Fetched Successfully");
+      state.selectedMovieOrShow = action.payload;
+    });
+    builderArg.addCase(fetchAsyncMovieOrShowDetail.rejected, () => {
+      console.log("Rejected");
+    });
   }
 })
 
-export const { addMovies } = movieSlice.actions;
+export const { addMovies, removeSelectedMovieOrShow } = movieSlice.actions;
 export default movieSlice.reducer;
 export const getAllMovies = (state: RootState) => state.movieReducer.movies;
 export const getAllShows = (state: RootState) => state.movieReducer.shows;
+export const getSelectedMovieOrShow = (state: RootState) => state.movieReducer.selectedMovieOrShow;
